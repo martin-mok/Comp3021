@@ -27,6 +27,28 @@ public class Game {
      */
     public void loadMap(String filename) throws InvalidMapException {
         //TODO
+        Scanner sc=new Scanner(new File(filename));
+        int row=sc.nextInt();
+        int col=sc.nextInt();
+        System.out.println(row);//delete
+        System.out.println(col);//delete
+        this.numRows=row;
+        this.numCols=col;
+        rep=new char[this.numCols][this.numRows];//[x][y]||||
+        sc.nextLine();
+        for(int r=0;r<this.numRows;r++){
+            String line=sc.nextLine();
+            //System.out.println(line);//delete
+            for(int c=0;c<this.numCols;c++){
+                rep[c][r]=line.charAt(c);
+            }
+        }
+        sc.close();
+        m=new Map();
+        m.initialize(this.numRows,this.numCols,this.rep);
+
+
+
 
     }
 
@@ -53,6 +75,12 @@ public class Game {
      * Print the map to console
      */
     public void display() {
+        for(int i=0;i<this.numRows;i++){
+            for(int j=0;j<this.numCols;j++){
+                System.out.print(this.rep[j][i]);
+            }
+            System.out.println();
+        }
         //TODO
 
     }
