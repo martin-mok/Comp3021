@@ -33,6 +33,12 @@ public class Map {
      */
     public void initialize(int rows, int cols, char[][] rep) throws InvalidMapException {
         //TODO
+        cells=new Cell[rows][cols];
+        for(int i=0;i<cols;i++){
+            for(int j=0;j<rows;j++){
+                cells[i][j]=rep[i][j];
+            }
+        }
 
     }
 
