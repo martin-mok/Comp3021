@@ -81,7 +81,7 @@ public class Game {
     public void display() {
         for(int i=0;i<this.numRows;i++){
             for(int j=0;j<this.numCols;j++){
-                System.out.print(this.rep[j][i]);
+                System.out.print(this.m.getCells()[j][i].getRepresentation());
             }
             System.out.println();
         }
@@ -100,6 +100,27 @@ public class Game {
      */
     public boolean makeMove(char c) {
         //TODO
+        switch(c){
+            case 'w':
+                m.movePlayer(Map.Direction.UP);
+                break;
+            case 'a':
+                m.movePlayer(Map.Direction.LEFT);
+                break;
+            case 's':
+                m.movePlayer(Map.Direction.DOWN);
+                break;
+            case 'd':
+                m.movePlayer(Map.Direction.RIGHT);
+                break;
+            case 'r':
+                try{
+                m.initialize(this.numRows,this.numCols,this.rep);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                break;
+        }
         return false; // You may also modify this line.
     }
 

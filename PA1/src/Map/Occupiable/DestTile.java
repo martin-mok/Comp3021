@@ -37,6 +37,6 @@ public class DestTile extends Tile {
     @Override
     public char getRepresentation() {
         //TODO
-        return ' '; // You may also modify this line.
+        return destID; // You may also modify this line.
     }
 }

@@ -33,13 +33,53 @@ public class Map {
      */
     public void initialize(int rows, int cols, char[][] rep) throws InvalidMapException {
         //TODO
-        cells=new Cell[rows][cols];
+        cells=new Cell[cols][rows];
+        ArrayList<Cell> walllist=new ArrayList<Cell>();
+        ArrayList<Character> destlist=new ArrayList<Character>();
+        ArrayList<Character> cratelist=new ArrayList<Character>();
+        int numplayer=0;//check whether there are only 1 player
         for(int i=0;i<cols;i++){
             for(int j=0;j<rows;j++){
-                cells[i][j]=rep[i][j];
+                if(rep[i][j]=='#'){
+                    cells[i][j]=new Wall();
+                    walllist.add(cells[i][j]);
+                }else if(Character.isUpperCase(rep[i][j])) {
+                    cells[i][j] = new DestTile(rep[i][j]);
+                    destlist.add(rep[i][j]);
+                }else{
+                    //cells[i][j]=new Tile();
+                    if(rep[i][j]=='@') {
+                        Tile tile = new Tile();
+                        this.player=new Player(j, i);
+                        tile.setOccupant(this.player);
+                        cells[i][j] = tile;
+                        numplayer++;
+                    }else if(rep[i][j]=='.'){
+                        cells[i][j] = new Tile();
+                    }else if(Character.isLowerCase(rep[i][j])){
+                        Tile tile=new Tile();
+                        tile.setOccupant(new Crate(j,i,rep[i][j]));
+                        cells[i][j]=tile;
+                        cratelist.add(rep[i][j]);
+                    }else {
+                        throw new UnknownElementException("there is a unknown element on your map: "+rep[i][j]);
+                    }
+                }
             }
         }
-
+        //error check
+        //multiple player
+        //crate dest id missmatch;
+        ////wall not close(start with the first wall on the list, check nearby have wall or not, if have add this to list, and move to the other for check then compare list)
+        if(numplayer>1){
+            throw new InvalidNumberOfPlayersException("you have number of Player>1");
+        }else{
+            for(char c:destlist) {
+                if (!cratelist.contains(Character.toLowerCase(c))){
+                    throw new UnknownElementException("your crate id is mismatch with dest id");
+                }
+            }
+        }
     }
 
     public ArrayList<DestTile> getDestTiles() {
@@ -64,6 +104,107 @@ public class Map {
      */
     public boolean movePlayer(Direction d) {
         //TODO
+        if(d==Direction.UP) {
+            if(player.getR()==0){
+                return false;
+            }else if(cells[player.getC()][player.getR()-1]instanceof Wall){
+                return false;
+            }else if(cells[player.getC()][player.getR()-1]instanceof Tile){
+                var tile=(Tile)cells[player.getC()][player.getR()-1];
+                if(tile.getOccupant().isPresent()){
+                    if(moveCrate((Crate) tile.getOccupant().get(),d)){
+                        tile.setOccupant(player);
+                        Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                        orgtile.removeOccupant();
+                        player.setPos(player.getR()-1,player.getC());
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    tile.setOccupant(player);
+                    Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                    orgtile.removeOccupant();
+                    player.setPos(player.getR()-1,player.getC());
+                    return true;
+                }
+            }
+        }else if(d==Direction.DOWN) {
+            if(player.getR()==0){
+                return false;
+            }else if(cells[player.getC()][player.getR()+1]instanceof Wall){
+                return false;
+            }else if(cells[player.getC()][player.getR()+1]instanceof Tile){
+                var tile=(Tile)cells[player.getC()][player.getR()+1];
+                if(tile.getOccupant().isPresent()){
+                    if(moveCrate((Crate) tile.getOccupant().get(),d)){
+                        tile.setOccupant(player);
+                        Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                        orgtile.removeOccupant();
+                        player.setPos(player.getR()+1,player.getC());
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    tile.setOccupant(player);
+                    Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                    orgtile.removeOccupant();
+                    player.setPos(player.getR()+1,player.getC());
+                    return true;
+                }
+            }
+        }else if(d==Direction.LEFT) {
+            if(player.getR()==0){
+                return false;
+            }else if(cells[player.getC()-1][player.getR()]instanceof Wall){
+                return false;
+            }else if(cells[player.getC()-1][player.getR()]instanceof Tile){
+                var tile=(Tile)cells[player.getC()-1][player.getR()];
+                if(tile.getOccupant().isPresent()){
+                    if(moveCrate((Crate) tile.getOccupant().get(),d)){
+                        tile.setOccupant(player);
+                        Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                        orgtile.removeOccupant();
+                        player.setPos(player.getR(),player.getC()-1);
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    tile.setOccupant(player);
+                    Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                    orgtile.removeOccupant();
+                    player.setPos(player.getR(),player.getC()-1);
+                    return true;
+                }
+            }
+        }else if(d==Direction.UP) {
+            if(player.getR()==0){
+                return false;
+            }else if(cells[player.getC()+1][player.getR()]instanceof Wall){
+                return false;
+            }else if(cells[player.getC()+1][player.getR()]instanceof Tile){
+                var tile=(Tile)cells[player.getC()+1][player.getR()];
+                if(tile.getOccupant().isPresent()){
+                    if(moveCrate((Crate) tile.getOccupant().get(),d)){
+                        tile.setOccupant(player);
+                        Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                        orgtile.removeOccupant();
+                        player.setPos(player.getR(),player.getC()+1);
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    tile.setOccupant(player);
+                    Tile orgtile=(Tile)cells[player.getC()][player.getR()];
+                    orgtile.removeOccupant();
+                    player.setPos(player.getR(),player.getC()+1);
+                    return true;
+                }
+            }
+        }
         return false; // You may also modify this line.
     }
 
