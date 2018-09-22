@@ -1,5 +1,5 @@
 import Exceptions.InvalidMapException;
-
+import Map.*;
 import java.util.Scanner;
 
 public class Runner {
