@@ -130,7 +130,7 @@ public class Map {
                 }
             }
         }else if(d==Direction.DOWN) {
-            if(player.getR()==0){
+            if(player.getR()==cells[0].length){
                 return false;
             }else if(cells[player.getC()][player.getR()+1]instanceof Wall){
                 return false;
@@ -155,7 +155,7 @@ public class Map {
                 }
             }
         }else if(d==Direction.LEFT) {
-            if(player.getR()==0){
+            if(player.getC()==0){
                 return false;
             }else if(cells[player.getC()-1][player.getR()]instanceof Wall){
                 return false;
@@ -179,8 +179,8 @@ public class Map {
                     return true;
                 }
             }
-        }else if(d==Direction.UP) {
-            if(player.getR()==0){
+        }else if(d==Direction.RIGHT) {
+            if(player.getC()==cells.length){
                 return false;
             }else if(cells[player.getC()+1][player.getR()]instanceof Wall){
                 return false;
@@ -218,6 +218,78 @@ public class Map {
      */
     private boolean moveCrate(Crate c, Direction d) {
         //TODO
+        if(d==Direction.UP){
+            if(c.getR()==0){
+                return false;
+            }
+            var postarget=cells[c.getC()][c.getR()-1];
+            if(postarget instanceof Wall) {
+                return false;
+            }
+            if(((Tile) postarget).getOccupant().isPresent()){
+                return false;
+            }else{
+                ((Tile) postarget).setOccupant(c);
+                ((Tile)cells[c.getC()][c.getR()]).removeOccupant();
+                c.setPos(c.getR()-1,c.getC());
+                return true;
+            }
+        }
+        if(d==Direction.DOWN){
+            if(c.getR()==cells[0].length){
+                return false;
+            }
+            var postarget=cells[c.getC()][c.getR()+1];
+            if(postarget instanceof Wall) {
+                return false;
+            }
+            if(((Tile) postarget).getOccupant().isPresent()){
+                return false;
+            }else{
+                ((Tile) postarget).setOccupant(c);
+                ((Tile)cells[c.getC()][c.getR()]).removeOccupant();
+                c.setPos(c.getR()+1,c.getC());
+                return true;
+            }
+        }
+        if(d==Direction.LEFT){
+            if(c.getC()==0){
+                return false;
+            }
+            var postarget=cells[c.getC()-1][c.getR()];
+            if(postarget instanceof Wall) {
+                return false;
+            }
+            if(((Tile) postarget).getOccupant().isPresent()){
+                return false;
+            }else{
+                ((Tile) postarget).setOccupant(c);
+                ((Tile)cells[c.getC()][c.getR()]).removeOccupant();
+                c.setPos(c.getR(),c.getC()-1);
+                return true;
+            }
+        }
+        if(d==Direction.RIGHT){
+            if(c.getC()==cells.length){
+                System.out.println("length");
+                return false;
+            }
+            var postarget=cells[c.getC()+1][c.getR()];
+            if(postarget instanceof Wall) {
+                System.out.println("wall");
+                return false;
+            }
+            if(((Tile) postarget).getOccupant().isPresent()){
+                System.out.println("have stuff");
+                return false;
+            }else{
+                System.out.println("move");
+                ((Tile) postarget).setOccupant(c);
+                ((Tile)cells[c.getC()][c.getR()]).removeOccupant();
+                c.setPos(c.getR(),c.getC()+1);
+                return true;
+            }
+        }
         return false; // You may also modify this line.
     }
 
