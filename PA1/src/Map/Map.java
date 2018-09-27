@@ -305,7 +305,21 @@ public class Map {
      */
     public boolean isOccupiableAndNotOccupiedWithCrate(int r, int c) {
         //TODO
-        return false; // You may also modify this line.
+        try{
+            Occupiable o = (Occupiable) cells[c][r];
+            if(o.getOccupant().isPresent()){
+                if(o.getOccupant().get() instanceof Crate){
+                    return false;
+                }else{
+                    return true;
+                }
+            }else{
+                return true;
+            }
+        }catch(Exception e){
+            return false;
+        }
+        //return false; // You may also modify this line.
     }
 
     public enum Direction {
