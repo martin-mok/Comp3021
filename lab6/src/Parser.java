@@ -19,7 +19,8 @@ public class Parser {
 					if (c == ' ' || c == '\t' || c == '(' || c == ')') {
 						break;
 					} else {
-						token += c;
+						token += c;988888888
+
 					}
 				}
 				tokens.add(token);
